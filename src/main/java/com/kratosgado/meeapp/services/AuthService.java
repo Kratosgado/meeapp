@@ -1,9 +1,11 @@
 package com.kratosgado.meeapp.services;
 
+import com.kratosgado.meeapp.dtos.LoginDto;
 import com.kratosgado.meeapp.dtos.RegisterUserDto;
 import com.kratosgado.meeapp.models.User;
 import com.kratosgado.meeapp.repositories.UserRepo;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,5 +25,11 @@ public class AuthService {
 	public User signup(RegisterUserDto input) {
 		User user = new User(input);
 		return userRepo.save(user);
+	}
+
+	public User login(LoginDto input) {
+		authManager.authenticate(
+				new UsernamePasswordAuthenticationToken(input.getEmail(), input.getPassword()));
+		return userRepo.findByEmail(input.getEmail()).orElseThrow();
 	}
 }
