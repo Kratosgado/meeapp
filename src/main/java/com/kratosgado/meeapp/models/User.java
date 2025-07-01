@@ -44,7 +44,7 @@ public class User implements UserDetails {
 
 	@Override
 	public String getPassword() {
-		throw new UnsupportedOperationException("Unimplemented method 'getPassword'");
+		return password;
 	}
 
 	@Override
@@ -94,6 +94,10 @@ public class User implements UserDetails {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }
 

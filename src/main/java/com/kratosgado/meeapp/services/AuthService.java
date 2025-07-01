@@ -23,6 +23,7 @@ public class AuthService {
 	}
 
 	public User signup(RegisterUserDto input) {
+		input.setPassword(passwordEncoder.encode(input.getPassword()));
 		User user = new User(input);
 		return userRepo.save(user);
 	}

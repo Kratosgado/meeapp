@@ -1,11 +1,13 @@
-@baseurl =localhost:8080/api
+@baseurl =localhost:9000/api
 
 # @name get users
 GET {{baseurl}}/users
+Authorization: Bearer dfkljdf
 
 ###
 # @name create user
 POST {{baseurl}}/users
+Authorization: Bearer dfkljdf
 Content-Type: application/json
 
 {

@@ -1,0 +1,20 @@
+@baseurl =localhost:9000/auth
+
+
+POST {{baseurl}}/signup
+Content-Type: application/json
+
+{
+	"email": "kratosgado@gmail.com",
+	"password": "28935617",
+	"name": "kratosgado"
+}
+
+###
+POST {{baseurl}}/login
+Content-Type: application/json
+
+{
+	"email": "kratosgado@gmail.com",
+	"password": "28935617"
+}
