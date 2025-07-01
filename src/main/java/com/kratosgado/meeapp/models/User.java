@@ -1,5 +1,6 @@
 package com.kratosgado.meeapp.models;
 
+import com.kratosgado.meeapp.dtos.RegisterUserDto;
 import jakarta.persistence.*;
 import java.util.Collection;
 import java.util.List;
@@ -29,11 +30,11 @@ public class User implements UserDetails {
 	public User() {
 	}
 
-	public User(String name, String email, String password, Role role) {
-		this.name = name;
-		this.email = email;
-		this.password = password;
-		this.role = role;
+	public User(RegisterUserDto input) {
+		this.name = input.getName();
+		this.email = input.getEmail();
+		this.password = input.getPassword();
+		this.role = Role.USER;
 	}
 
 	@Override
