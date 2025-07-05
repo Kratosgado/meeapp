@@ -9,5 +9,4 @@ public class MeeappApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MeeappApplication.class, args);
 	}
-
 }
