@@ -1,14 +1,7 @@
 package com.kratosgado.meeapp.models;
 
-// id
-
-// name
-// users many-to-many
-// messages
-// posts
-//
-//
 import jakarta.persistence.*;
+import java.util.Set;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,4 +21,14 @@ public class Group {
 
 	@Column(nullable = false)
 	private String name;
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "user_groups", joinColumns = @JoinColumn(name = "group_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+	private Set<User> users;
+
+	@OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<Message> messages;
+
+	@OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<Post> posts;
 }

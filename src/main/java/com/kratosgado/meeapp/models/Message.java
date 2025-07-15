@@ -1,12 +1,5 @@
 package com.kratosgado.meeapp.models;
 
-// id
-// text
-// userId
-// groupId
-// image?
-//
-
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -30,4 +23,12 @@ public class Message {
 
 	@Column
 	private String image;
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "group_id", nullable = false)
+	private Group group;
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
 }

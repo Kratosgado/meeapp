@@ -1,19 +1,11 @@
 package com.kratosgado.meeapp.models;
 
 import jakarta.persistence.*;
-import java.util.List;
+import java.util.Set;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-// id
-// title
-// content
-// image
-// groupId
-// interests
-// userId
 
 @Data
 @Getter
@@ -32,10 +24,16 @@ public class Post {
 	@Column()
 	private String imageUrl;
 
-	// @ForeignKey()
-	private String userId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
 
-	private String groupId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "group_id", nullable = false)
+	private Group group;
 
-	private List<String> interests;
+	@ElementCollection
+	@CollectionTable(name = "post_interests", joinColumns = @JoinColumn(name = "post_id"))
+	@Column(name = "interests")
+	private Set<String> interests;
 }

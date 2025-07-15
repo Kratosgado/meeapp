@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.sql.Date;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,8 +24,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name = "users")
 public class User implements UserDetails {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private String id;
 
 	@Column(nullable = false, length = 100)
 	private String name;
@@ -38,8 +39,19 @@ public class User implements UserDetails {
 	@Column(name = "profile_picture")
 	private String profilePicture;
 
+	@ElementCollection
+	@CollectionTable(name = "user_interests", joinColumns = @JoinColumn(name = "user_id"))
 	@Column
-	private List<String> interests;
+	private Set<String> interests;
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<Post> posts;
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<Message> messages;
+
+	@ManyToMany(mappedBy = "users")
+	private Set<Group> groups;
 
 	// queries
 	// getProfile
