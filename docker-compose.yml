@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  meeapp:
+    image: docker-spring-boot-postgres:latest
+    build:
+      context: .
+    container_name: meeapp
+    depends_on: [db]
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=klsdyhfeu38923y4
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/meeapp
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=klsdyhfeu38923y4
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports: ['9000:9000']
+  db:
+    image: postgres
+    container_name: db
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=klsdyhfeu38923y4
+      - POSTGRES_DB=meeapp
+    ports: ['5432:5432']

@@ -1,7 +1,6 @@
 package com.kratosgado.meeapp.models;
 
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
 import java.util.List;
 import lombok.Data;
 import lombok.Getter;
