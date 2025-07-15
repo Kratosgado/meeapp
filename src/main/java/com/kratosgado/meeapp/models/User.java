@@ -35,6 +35,19 @@ public class User implements UserDetails {
 	@Column(nullable = false, length = 100)
 	private String password;
 
+	@Column(name = "profile_picture")
+	private String profilePicture;
+
+	@Column
+	private List<String> interests;
+
+	// queries
+	// getProfile
+	// get posts
+	// get posts by interest
+	// get groups
+	//
+
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
