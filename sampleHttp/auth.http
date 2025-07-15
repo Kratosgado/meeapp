@@ -1,4 +1,4 @@
-@baseurl =localhost:9000/auth
+@baseurl =localhost:9000/api/auth
 
 
 POST {{baseurl}}/signup
