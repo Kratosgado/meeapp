@@ -1,0 +1,41 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: meeapp
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+      use-new-id-generator-mappings: false
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+      default_schema: app_schema
+  liquibase:
+    enabled: false
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.url}
+    password: ${spring.datasource.password}
+    change-log: filesystem:gradle/liquibase/changelog/root-changelog.sql
+    hibernate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+    diff-change-log-file: gradle/liquibase/changelog/changes/V${version}__${description}.sql
+    diff-types: tables,columns,indexes,foreignkeys,primarykeys,uniqueconstraints
+    parameters:
+      environment: dev
+springdoc:
+  api-docs:
+    path: /docs/api-docs
+  swagger-ui:
+    path: /docs/swagger-ui.html
+    operations-sorter: method
+security:
+  jwt:
+    secret-key: ${JWT_SECRET_KEY}
+    expiration-time: ${JWT_EXPIRATION_TIME:36000000}
