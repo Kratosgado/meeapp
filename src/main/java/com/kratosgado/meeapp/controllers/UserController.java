@@ -2,6 +2,7 @@ package com.kratosgado.meeapp.controllers;
 
 import com.kratosgado.meeapp.models.User;
 import com.kratosgado.meeapp.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +20,18 @@ public class UserController {
 		this.userService = userService;
 	}
 
+
 	@GetMapping
 	public List<User> getAllUsers() {
 		return userService.getAllUsers();
 	}
 
+	@Operation(summary = "Get current authenticated user")
+	@GetMapping("/me")
+	public ResponseEntity<User> getMe() {
+		return ResponseEntity.ok(userService.getMe());
+		// return ResponseEntity.ok(userService.getMe());
+	}
 	@GetMapping("/{id}")
 	public ResponseEntity<User> getUserById(@PathVariable String id) {
 		User user = userService.getUserById(id);

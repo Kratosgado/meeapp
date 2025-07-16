@@ -18,3 +18,9 @@ Content-Type: application/json
 	"email": "kratosgado@gmail.com",
 	"password": "28935617"
 }
+
+# @lang
+> {%
+const data = response.body;
+client.global.set("token", data.token);
+%}

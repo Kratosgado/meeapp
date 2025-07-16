@@ -18,51 +18,53 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
-	private final HandlerExceptionResolver hResolver;
-	private final JwtService jwtService;
-	private final UserDetailsService uService;
+  private final HandlerExceptionResolver hResolver;
+  private final JwtService jwtService;
+  private final UserDetailsService uService;
 
-	public JwtAuthFilter(
-			JwtService jwtService,
-			UserDetailsService uService,
-			HandlerExceptionResolver handlerExceptionResolver) {
-		this.jwtService = jwtService;
-		this.hResolver = handlerExceptionResolver;
-		this.uService = uService;
-	}
+  public JwtAuthFilter(
+      JwtService jwtService,
+      UserDetailsService uService,
+      HandlerExceptionResolver handlerExceptionResolver) {
+    this.jwtService = jwtService;
+    this.hResolver = handlerExceptionResolver;
+    this.uService = uService;
+  }
 
-	@Override
-	protected void doFilterInternal(
-			@NonNull HttpServletRequest req,
-			@NonNull HttpServletResponse res,
-			@NonNull FilterChain filterChain)
-			throws ServletException, IOException {
-		final String authHeader = req.getHeader("Authorization");
+  @Override
+  protected void doFilterInternal(
+      @NonNull HttpServletRequest req,
+      @NonNull HttpServletResponse res,
+      @NonNull FilterChain filterChain)
+      throws ServletException, IOException {
+    final String authHeader = req.getHeader("Authorization");
 
-		if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-			filterChain.doFilter(req, res);
-			return;
-		}
+    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+      filterChain.doFilter(req, res);
+      return;
+    }
 
-		try {
-			final String jwt = authHeader.substring(7);
-			final String userEmail = jwtService.extractUsername(jwt);
+    try {
+      final String jwt = authHeader.substring(7);
+      final String userId = jwtService.extractUsername(jwt);
+      // final String userId = jwtService.extractUserId(jwt);
 
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			if (userEmail != null && auth == null) {
-				UserDetails userDetails = this.uService.loadUserByUsername(userEmail);
+      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+      if (userId != null && auth == null) {
+        UserDetails userDetails = this.uService.loadUserByUsername(userId);
 
-				if (jwtService.isTokenValid(jwt, userDetails)) {
-					UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-							userDetails, null, userDetails.getAuthorities());
-					authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
-					SecurityContextHolder.getContext().setAuthentication(authToken);
-				}
-			}
+        if (jwtService.isTokenValid(jwt, userDetails)) {
+          UsernamePasswordAuthenticationToken authToken =
+              new UsernamePasswordAuthenticationToken(
+                  userDetails, null, userDetails.getAuthorities());
+          authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
+          SecurityContextHolder.getContext().setAuthentication(authToken);
+        }
+      }
 
-			filterChain.doFilter(req, res);
-		} catch (Exception e) {
-			hResolver.resolveException(req, res, null, e);
-		}
-	}
+      filterChain.doFilter(req, res);
+    } catch (Exception e) {
+      hResolver.resolveException(req, res, null, e);
+    }
+  }
 }

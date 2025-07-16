@@ -2,19 +2,9 @@
 
 # @name get users
 GET {{baseurl}}/users
-Authorization: Bearer dfkljdf
-
-###
-# @name create user
-POST {{baseurl}}/users
-Authorization: Bearer dfkljdf
-Content-Type: application/json
-
-{
-	"email": "gado@gmail.com",
-	"name": "Gado"
-}
+Authorization: Bearer {{token}}
 
 ###
 # @name get user
-GET {{baseurl}}/users/2
+GET {{baseurl}}/users/me
+Authorization: Bearer {{token}}

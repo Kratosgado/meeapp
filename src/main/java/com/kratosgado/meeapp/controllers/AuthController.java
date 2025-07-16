@@ -22,36 +22,44 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Tag(name = "Authentication", description = "Authentication management APIs")
 public class AuthController {
-	private final JwtService jwtService;
-	private final AuthService authService;
+  private final JwtService jwtService;
+  private final AuthService authService;
 
-	public AuthController(JwtService jwtService, AuthService authService) {
-		this.jwtService = jwtService;
-		this.authService = authService;
-	}
+  public AuthController(JwtService jwtService, AuthService authService) {
+    this.jwtService = jwtService;
+    this.authService = authService;
+  }
 
-	@Operation(summary = "Register a new user")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Successfully registred", content = @Content(schema = @Schema(implementation = User.class))),
-			@ApiResponse(responseCode = "400", description = "Invalid inputs")
-	})
-	@PostMapping("/signup")
-	public ResponseEntity<User> register(@RequestBody RegisterUserDto body) {
-		User regUser = authService.signup(body);
-		return ResponseEntity.ok(regUser);
-	}
+  @Operation(summary = "Register a new user")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Successfully registred",
+            content = @Content(schema = @Schema(implementation = User.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid inputs")
+      })
+  @PostMapping("/signup")
+  public ResponseEntity<User> register(@RequestBody RegisterUserDto body) {
+    User regUser = authService.signup(body);
+    return ResponseEntity.ok(regUser);
+  }
 
-	@Operation(summary = "Login user", description = "Authenticates a user and returns a JWT token")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Successfully authenticated", content = @Content(schema = @Schema(implementation = LoginResponse.class))),
-			@ApiResponse(responseCode = "401", description = "Invalid credentials")
-	})
-	@PostMapping("/login")
-	public ResponseEntity<LoginResponse> login(@RequestBody LoginDto body) {
-		User authUser = authService.login(body);
-		String token = jwtService.generateToken(authUser);
-		LoginResponse res = new LoginResponse(token, jwtService.getExpirationTime());
+  @Operation(summary = "Login user", description = "Authenticates a user and returns a JWT token")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Successfully authenticated",
+            content = @Content(schema = @Schema(implementation = LoginResponse.class))),
+        @ApiResponse(responseCode = "401", description = "Invalid credentials")
+      })
+  @PostMapping("/login")
+  public ResponseEntity<LoginResponse> login(@RequestBody LoginDto body) {
+    User authUser = authService.login(body);
+    String token = jwtService.generateToken(authUser);
+    LoginResponse res = new LoginResponse(token, jwtService.getExpirationTime());
 
-		return ResponseEntity.ok(res);
-	}
+    return ResponseEntity.ok(res);
+  }
 }
