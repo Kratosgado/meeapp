@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Tag(name = "Authentication", description = "Authentication management APIs")
 public class AuthController {
-	public final JwtService jwtService;
+	private final JwtService jwtService;
 	private final AuthService authService;
 
 	public AuthController(JwtService jwtService, AuthService authService) {
@@ -36,9 +36,9 @@ public class AuthController {
 			@ApiResponse(responseCode = "400", description = "Invalid inputs")
 	})
 	@PostMapping("/signup")
-	public ResponseEntity<String> register(@RequestBody RegisterUserDto body) {
+	public ResponseEntity<User> register(@RequestBody RegisterUserDto body) {
 		User regUser = authService.signup(body);
-		return ResponseEntity.ok("User registerd Successfully");
+		return ResponseEntity.ok(regUser);
 	}
 
 	@Operation(summary = "Login user", description = "Authenticates a user and returns a JWT token")
