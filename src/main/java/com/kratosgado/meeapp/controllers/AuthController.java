@@ -36,9 +36,9 @@ public class AuthController {
 			@ApiResponse(responseCode = "400", description = "Invalid inputs")
 	})
 	@PostMapping("/signup")
-	public ResponseEntity<User> register(@RequestBody RegisterUserDto body) {
+	public ResponseEntity<String> register(@RequestBody RegisterUserDto body) {
 		User regUser = authService.signup(body);
-		return ResponseEntity.ok(regUser);
+		return ResponseEntity.ok("User registerd Successfully");
 	}
 
 	@Operation(summary = "Login user", description = "Authenticates a user and returns a JWT token")
