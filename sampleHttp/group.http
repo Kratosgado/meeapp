@@ -1,1 +1,15 @@
 @baseurl =localhost:9000/api/groups
+
+
+POST {{baseurl}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+	"name": "Philosophy"
+}
+
+###
+# @name get groups
+GET {{baseurl}}
+Authorization: Bearer {{token}}

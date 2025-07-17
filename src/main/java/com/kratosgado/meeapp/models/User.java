@@ -4,6 +4,7 @@ import com.kratosgado.meeapp.dtos.RegisterUserDto;
 import jakarta.persistence.*;
 import java.sql.Date;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.Data;
@@ -42,16 +43,16 @@ public class User implements UserDetails {
 	@ElementCollection
 	@CollectionTable(name = "user_interests", joinColumns = @JoinColumn(name = "user_id"))
 	@Column
-	private Set<String> interests;
+	private Set<String> interests = new HashSet<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<Post> posts;
+	private Set<Post> posts = new HashSet<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<Message> messages;
+	private Set<Message> messages = new HashSet<>();
 
 	@ManyToMany(mappedBy = "users")
-	private Set<Group> groups;
+	private Set<Group> groups = new HashSet<>();
 
 	// queries
 	// getProfile
@@ -110,6 +111,11 @@ public class User implements UserDetails {
 	@Override
 	public String getUsername() {
 		return email;
+	}
+
+	@Override
+	public String toString() {
+		return id;
 	}
 }
 

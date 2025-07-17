@@ -1,13 +1,14 @@
 package com.kratosgado.meeapp.controllers;
 
 import com.kratosgado.meeapp.dtos.CreateGroupDto;
-import com.kratosgado.meeapp.models.Group;
+import com.kratosgado.meeapp.dtos.GroupResponseDto;
 import com.kratosgado.meeapp.services.GroupService;
 import com.kratosgado.meeapp.services.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,8 +39,18 @@ public class GroupController {
 			@ApiResponse(responseCode = "401", description = "Not authenticated")
 	})
 	@PostMapping
-	public ResponseEntity<Group> createGroup(@RequestBody CreateGroupDto dto) {
+	public ResponseEntity<GroupResponseDto> createGroup(@RequestBody CreateGroupDto dto) {
 		return ResponseEntity.ok(groupService.createGroup(dto.getName()));
+	}
+
+	@Operation(summary = "Get a group by ID")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Groups found"),
+			@ApiResponse(responseCode = "404", description = "Groups not found")
+	})
+	@GetMapping
+	public List<GroupResponseDto> getGroups() {
+		return groupService.getGroups();
 	}
 
 	@Operation(summary = "Get a group by ID")
@@ -48,7 +59,7 @@ public class GroupController {
 			@ApiResponse(responseCode = "404", description = "Group not found")
 	})
 	@GetMapping("/{id}")
-	public ResponseEntity<Group> getGroup(@PathVariable String id) {
+	public ResponseEntity<GroupResponseDto> getGroup(@PathVariable String id) {
 		return ResponseEntity.ok(groupService.getGroupById(id));
 	}
 }

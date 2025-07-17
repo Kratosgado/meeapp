@@ -20,9 +20,8 @@ public class UserService {
 	}
 
 	public User getMe() {
-		String id = SecurityContextHolder.getContext().getAuthentication().getName();
-		logger.info("Fetching user details for id: {}", id);
-		return userRepo.findByEmail(id).orElseThrow(() -> new RuntimeException("User not found"));
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		return userRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
 	}
 
 	public List<User> getAllUsers() {

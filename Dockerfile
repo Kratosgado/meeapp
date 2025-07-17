@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jre-alpine AS build
+FROM azul/zulu-openjdk:21-latest AS build
 
 WORKDIR /workspace/app
 
@@ -10,7 +10,7 @@ COPY src  src
 
 RUN ./gradlew build -x test
 
-FROM eclipse-temurin:21-jre-alpine
+FROM azul/zulu-openjdk:21-latest
 VOLUME [ "/tmp" ]
 COPY --from=build /workspace/app/build/libs/*.jar app.jar
 EXPOSE 9000

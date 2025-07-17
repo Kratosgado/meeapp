@@ -2,7 +2,7 @@ server:
   port: 9000
 logging:
   level:
-    com.kratosgado.meeapp: INFO
+    com.kratosgado.meeapp: DEBUG
     org.springframework: WARN
 spring:
   application:
