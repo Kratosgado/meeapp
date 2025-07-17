@@ -13,3 +13,8 @@ Content-Type: application/json
 # @name get groups
 GET {{baseurl}}
 Authorization: Bearer {{token}}
+
+###
+# @name get groups
+POST {{baseurl}}/join/433351e3-760f-4be7-891f-d1e0a4fda7d7
+Authorization: Bearer {{token}}

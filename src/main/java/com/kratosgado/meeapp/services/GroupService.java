@@ -12,36 +12,43 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GroupService {
-	private final Logger logger = LoggerFactory.getLogger(GroupService.class);
-	private final GroupRepo groupRepo;
-	private final UserService userService;
+  private final Logger logger = LoggerFactory.getLogger(GroupService.class);
+  private final GroupRepo groupRepo;
+  private final UserService userService;
 
-	@Autowired
-	public GroupService(GroupRepo groupRepo, UserService userService) {
-		this.groupRepo = groupRepo;
-		this.userService = userService;
-	}
+  @Autowired
+  public GroupService(GroupRepo groupRepo, UserService userService) {
+    this.groupRepo = groupRepo;
+    this.userService = userService;
+  }
 
-	public GroupResponseDto createGroup(String name) {
-		Group group = new Group(name, SecurityUtils.getCurrentUser());
-		group = groupRepo.save(group);
-		return convertToDto(group);
-	}
+  public GroupResponseDto createGroup(String name) {
+    Group group = new Group(name, SecurityUtils.getCurrentUser());
+    group = groupRepo.save(group);
+    return convertToDto(group);
+  }
 
-	public List<GroupResponseDto> getGroups() {
-		return groupRepo.findAll().stream().map(this::convertToDto).toList();
-	}
+  public void joinGroup(String id) {
+    if (!groupRepo.existsById(id)) {
+      throw new RuntimeException("Group not found");
+    }
+    groupRepo.addUserToGroup(id, SecurityUtils.getCurrentUserId());
+  }
 
-	public GroupResponseDto getGroupById(String id) {
-		return groupRepo.findById(id).map(this::convertToDto).orElse(null);
-	}
+  public List<GroupResponseDto> getGroups() {
+    return groupRepo.findAll().stream().map(this::convertToDto).toList();
+  }
 
-	private GroupResponseDto convertToDto(Group group) {
-		return GroupResponseDto.builder()
-				.id(group.getId())
-				.name(group.getName())
-				.creatorId(group.getCreator().getId())
-				.creatorName(group.getCreator().getName())
-				.build();
-	}
+  public GroupResponseDto getGroupById(String id) {
+    return groupRepo.findById(id).map(this::convertToDto).orElse(null);
+  }
+
+  private GroupResponseDto convertToDto(Group group) {
+    return GroupResponseDto.builder()
+        .id(group.getId())
+        .name(group.getName())
+        .creatorId(group.getCreator().getId())
+        .creatorName(group.getCreator().getName())
+        .build();
+  }
 }

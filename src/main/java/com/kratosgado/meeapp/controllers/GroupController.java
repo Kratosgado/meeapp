@@ -23,43 +23,56 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Groups")
 public class GroupController {
 
-	private final GroupService groupService;
-	private final MessageService messageService;
+  private final GroupService groupService;
+  private final MessageService messageService;
 
-	@Autowired
-	public GroupController(GroupService groupService, MessageService messageService) {
-		this.groupService = groupService;
-		this.messageService = messageService;
-	}
+  @Autowired
+  public GroupController(GroupService groupService, MessageService messageService) {
+    this.groupService = groupService;
+    this.messageService = messageService;
+  }
 
-	@Operation(summary = "Create a new group")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Group created successfully"),
-			@ApiResponse(responseCode = "400", description = "Invalid input"),
-			@ApiResponse(responseCode = "401", description = "Not authenticated")
-	})
-	@PostMapping
-	public ResponseEntity<GroupResponseDto> createGroup(@RequestBody CreateGroupDto dto) {
-		return ResponseEntity.ok(groupService.createGroup(dto.getName()));
-	}
+  @Operation(summary = "Create a new group")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "200", description = "Group created successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input"),
+        @ApiResponse(responseCode = "401", description = "Not authenticated")
+      })
+  @PostMapping
+  public ResponseEntity<GroupResponseDto> createGroup(@RequestBody CreateGroupDto dto) {
+    return ResponseEntity.ok(groupService.createGroup(dto.getName()));
+  }
 
-	@Operation(summary = "Get a group by ID")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Groups found"),
-			@ApiResponse(responseCode = "404", description = "Groups not found")
-	})
-	@GetMapping
-	public List<GroupResponseDto> getGroups() {
-		return groupService.getGroups();
-	}
+  @Operation(summary = "Get a group by ID")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "200", description = "Groups found"),
+        @ApiResponse(responseCode = "404", description = "Groups not found")
+      })
+  @GetMapping
+  public List<GroupResponseDto> getGroups() {
+    return groupService.getGroups();
+  }
 
-	@Operation(summary = "Get a group by ID")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Group found"),
-			@ApiResponse(responseCode = "404", description = "Group not found")
-	})
-	@GetMapping("/{id}")
-	public ResponseEntity<GroupResponseDto> getGroup(@PathVariable String id) {
-		return ResponseEntity.ok(groupService.getGroupById(id));
-	}
+  @PostMapping("/join/{groupId}")
+  public ResponseEntity<String> joinGroup(@PathVariable String groupId) {
+    // try {
+    groupService.joinGroup(groupId);
+    return ResponseEntity.ok("Joined successfully");
+    // } catch (Exception e) {
+    // return ResponseEntity.notFound().build();
+    // }
+  }
+
+  @Operation(summary = "Get a group by ID")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "200", description = "Group found"),
+        @ApiResponse(responseCode = "404", description = "Group not found")
+      })
+  @GetMapping("/{id}")
+  public ResponseEntity<GroupResponseDto> getGroup(@PathVariable String id) {
+    return ResponseEntity.ok(groupService.getGroupById(id));
+  }
 }

@@ -7,11 +7,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class SecurityUtils {
-	private static final Logger logger = LoggerFactory.getLogger(SecurityUtils.class);
+  private static final Logger logger = LoggerFactory.getLogger(SecurityUtils.class);
 
-	public static User getCurrentUser() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		// User user = new User();
-		return (User) auth.getPrincipal();
-	}
+  public static User getCurrentUser() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    // User user = new User();
+    return (User) auth.getPrincipal();
+  }
+
+  public static String getCurrentUserId() {
+    return (String) SecurityContextHolder.getContext().getAuthentication().getCredentials();
+  }
 }
