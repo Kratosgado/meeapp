@@ -21,17 +21,20 @@ spring:
         format_sql: true
       default_schema: app_schema
   liquibase:
-    enabled: false
-    url: ${spring.datasource.url}
-    user: ${spring.datasource.url}
-    password: ${spring.datasource.password}
-    change-log: filesystem:gradle/liquibase/changelog/root-changelog.sql
-    hibernate:
-      dialect: org.hibernate.dialect.PostgreSQLDialect
-    diff-change-log-file: gradle/liquibase/changelog/changes/V${version}__${description}.sql
-    diff-types: tables,columns,indexes,foreignkeys,primarykeys,uniqueconstraints
+    enabled: true
+    # url: ${spring.datasource.url}
+    # user: ${spring.datasource.url}
+    # password: ${spring.datasource.password}
+    # change-log: filesystem:gradle/liquibase/changelog/db.changelog-master.sql
+    change-log: classpath:db/changelog/db.changelog-master.sql
+    default_schema: app_schema
+    # hibernate:
+    #   dialect: org.hibernate.dialect.PostgreSQLDialect
+    # diff-change-log-file: gradle/liquibase/changelog/changes/V${version}__${description}.sql
+    # diff-types: tables,columns,indexes,foreignkeys,primarykeys,uniqueconstraints
     parameters:
       environment: dev
+    contexts: ${spring.profiles.active:dev}
 springdoc:
   api-docs:
     path: /docs/api-docs
