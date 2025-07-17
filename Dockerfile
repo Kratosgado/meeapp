@@ -1,9 +1,17 @@
-FROM amazoncorretto:17
+FROM eclipse-temurin:21-jre-alpine AS build
 
-ARG JAR_FILE=target/*.jar
+WORKDIR /workspace/app
 
-COPY ${JAR_FILE}} application.jar
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle .
+COPY settings.gradle .
+COPY src  src
 
-CMD  apt-get update -y
+RUN ./gradlew build -x test
 
-ENTRYPOINT [ "java", "-Xmx2048M", "-jar", "/application.jar"]
+FROM eclipse-temurin:21-jre-alpine
+VOLUME [ "/tmp" ]
+COPY --from=build /workspace/app/build/libs/*.jar app.jar
+EXPOSE 9000
+ENTRYPOINT [ "java", "-jar", "/app.jar" ]

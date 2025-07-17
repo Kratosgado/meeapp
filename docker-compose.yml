@@ -1,9 +1,8 @@
 version: '3.8'
 services:
   meeapp:
-    image: docker-spring-boot-postgres:latest
-    build:
-      context: .
+    build: .
+    # context: .
     container_name: meeapp
     depends_on: [db]
     environment:
@@ -22,3 +21,6 @@ services:
       - POSTGRES_PASSWORD=klsdyhfeu38923y4
       - POSTGRES_DB=meeapp
     ports: ['5432:5432']
+    volumes: ['postgres_data:/var/lib/postgresql/data']
+volumes:
+  postgres_data:
