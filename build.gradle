@@ -90,37 +90,37 @@ liquibase {
     }
     runList = 'main'
 }
-tasks.register('diffChangeLog', org.liquibase.gradle.LiquibaseTask) {
-    dependsOn compileJava
-    group = "liquibase"
-    description = "Generate a changelog from differences between database and entities"
-
-    doFirst {
-        liquibase {
-            activities {
-                main {
-                    changelogFile "src/main/resources/db/changelog/changes/${new Date().format('yyyyMMddHHmmss')}_changelog.sql"
-                    diffTypes 'tables,views,columns,indexes,foreignkeys,primarykeys,uniqueconstraints,data'
-                }
-            }
-        }
-    }
-}
-
-tasks.register('generateChangeLog', org.liquibase.gradle.LiquibaseTask) {
-    group = "liquibase"
-    description = "Generate a complete changelog from current database"
-
-    doFirst {
-        liquibase {
-            activities {
-                main {
-                    changelogFile 'src/main/resources/db/changelog/generated-changelog.sql'
-                }
-            }
-        }
-    }
-}
+// tasks.register('diffChangeLog', org.liquibase.gradle.LiquibaseTask) {
+//     dependsOn compileJava
+//     group = "liquibase"
+//     description = "Generate a changelog from differences between database and entities"
+//
+//     doFirst {
+//         liquibase {
+//             activities {
+//                 main {
+//                     changelogFile "src/main/resources/db/changelog/changes/${new Date().format('yyyyMMddHHmmss')}_changelog.sql"
+//                     diffTypes 'tables,views,columns,indexes,foreignkeys,primarykeys,uniqueconstraints,data'
+//                 }
+//             }
+//         }
+//     }
+// }
+//
+// tasks.register('generateChangeLog', org.liquibase.gradle.LiquibaseTask) {
+//     group = "liquibase"
+//     description = "Generate a complete changelog from current database"
+//
+//     doFirst {
+//         liquibase {
+//             activities {
+//                 main {
+//                     changelogFile 'src/main/resources/db/changelog/generated-changelog.sql'
+//                 }
+//             }
+//         }
+//     }
+// }
 
 // tasks.register('update', org.liquibase.gradle.LiquibaseTask) {
 //     group = "liquibase"

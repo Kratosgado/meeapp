@@ -8,9 +8,9 @@ spring:
   application:
     name: meeapp
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:meeapp}
+    username: ${DB_USERNAME:kratosgado}
+    password: ${DB_PASSWORD:28935617}
   jpa:
     hibernate:
       ddl-auto: update
@@ -43,5 +43,5 @@ springdoc:
     operations-sorter: method
 security:
   jwt:
-    secret-key: ${JWT_SECRET_KEY}
+    secret-key: ${JWT_SECRET_KEY:940ff3dce8ce688ebb9cd5c866cedd3b3d423d5ca31342d06402569949991832}
     expiration-time: ${JWT_EXPIRATION_TIME:36000000}
