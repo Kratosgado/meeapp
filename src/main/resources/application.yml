@@ -46,9 +46,13 @@ spring:
 springdoc:
   api-docs:
     path: /docs/api-docs
+    enabled: true
   swagger-ui:
     path: /docs/swagger-ui.html
     operations-sorter: method
+    enabled: true
+    disable-swagger-default-url: true
+  packages-to-scan: com.kratosgado.meeapp.controllers
 security:
   jwt:
     secret-key: ${JWT_SECRET_KEY:940ff3dce8ce688ebb9cd5c866cedd3b3d423d5ca31342d06402569949991832}
