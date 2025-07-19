@@ -1,6 +1,7 @@
 -- liquibase formatted sql
 
-CREATE SCHEMA IF NOT EXISTS app_schema;
+-- changeset system:1
+CREATE SCHEMA if not exists app_schema;
 
 -- changeset system:2
 CREATE TABLE IF NOT EXISTS app_schema.databasechangelog (
@@ -22,3 +23,13 @@ CREATE TABLE IF NOT EXISTS app_schema.databasechangelog (
 
 -- changeset system:3
 -- includeAll path="gradle/liquibase/changelog/changes/" relativeToChangelogFile="true"
+
+-- Include our new migration files
+-- changeset system:4
+-- include:db/changelog/changes/001_create_events_table.sql
+
+-- changeset system:5
+-- include:db/changelog/changes/002_enhance_existing_tables.sql
+
+-- changeset system:6
+-- include:db/changelog/changes/003_remove_role_column.sql

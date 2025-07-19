@@ -77,7 +77,7 @@ tasks.withType(GroovyCompile).configureEach {
 liquibase {
     activities {
         main {
-            changelogFile 'gradle/liquibase/changelog/root-changelog.sql'
+            changelogFile 'src/main/resources/db/changelog/db.changelog-master.sql'
             url project.findProperty('database.url') ?: 'jdbc:postgresql://localhost:5432/meeapp'
             username project.findProperty('database.username') ?: 'kratosgado'
             password project.findProperty('database.password') ?: '28935617'

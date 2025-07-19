@@ -30,30 +30,22 @@ public class AuthController {
     this.authService = authService;
   }
 
-  @Operation(summary = "Register a new user")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Successfully registred",
-            content = @Content(schema = @Schema(implementation = User.class))),
-        @ApiResponse(responseCode = "400", description = "Invalid inputs")
-      })
+  @Operation(summary = "Register a new user", description = "Creates a new user account with the provided information")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "User registered successfully", content = @Content(schema = @Schema(implementation = User.class))),
+      @ApiResponse(responseCode = "400", description = "Invalid input data or email already exists")
+  })
   @PostMapping("/signup")
   public ResponseEntity<User> register(@RequestBody RegisterUserDto body) {
     User regUser = authService.signup(body);
     return ResponseEntity.ok(regUser);
   }
 
-  @Operation(summary = "Login user", description = "Authenticates a user and returns a JWT token")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Successfully authenticated",
-            content = @Content(schema = @Schema(implementation = LoginResponse.class))),
-        @ApiResponse(responseCode = "401", description = "Invalid credentials")
-      })
+  @Operation(summary = "Login user", description = "Authenticates a user with email and password, returns a JWT token for subsequent API calls")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Login successful", content = @Content(schema = @Schema(implementation = LoginResponse.class))),
+      @ApiResponse(responseCode = "401", description = "Invalid credentials")
+  })
   @PostMapping("/login")
   public ResponseEntity<LoginResponse> login(@RequestBody LoginDto body) {
     User authUser = authService.login(body);

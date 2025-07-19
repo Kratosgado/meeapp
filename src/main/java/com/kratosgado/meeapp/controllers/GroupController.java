@@ -3,76 +3,153 @@ package com.kratosgado.meeapp.controllers;
 import com.kratosgado.meeapp.dtos.CreateGroupDto;
 import com.kratosgado.meeapp.dtos.GroupResponseDto;
 import com.kratosgado.meeapp.services.GroupService;
-import com.kratosgado.meeapp.services.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/groups")
 @Tag(name = "Groups")
+@RequiredArgsConstructor
 public class GroupController {
 
   private final GroupService groupService;
-  private final MessageService messageService;
-
-  @Autowired
-  public GroupController(GroupService groupService, MessageService messageService) {
-    this.groupService = groupService;
-    this.messageService = messageService;
-  }
 
   @Operation(summary = "Create a new group")
-  @ApiResponses(
-      value = {
-        @ApiResponse(responseCode = "200", description = "Group created successfully"),
-        @ApiResponse(responseCode = "400", description = "Invalid input"),
-        @ApiResponse(responseCode = "401", description = "Not authenticated")
-      })
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Group created successfully"),
+      @ApiResponse(responseCode = "400", description = "Invalid input or group name already exists"),
+      @ApiResponse(responseCode = "401", description = "Not authenticated")
+  })
   @PostMapping
   public ResponseEntity<GroupResponseDto> createGroup(@RequestBody CreateGroupDto dto) {
-    return ResponseEntity.ok(groupService.createGroup(dto.getName()));
+    GroupResponseDto group = groupService.createGroup(dto);
+    return ResponseEntity.ok(group);
   }
 
-  @Operation(summary = "Get a group by ID")
-  @ApiResponses(
-      value = {
-        @ApiResponse(responseCode = "200", description = "Groups found"),
-        @ApiResponse(responseCode = "404", description = "Groups not found")
-      })
-  @GetMapping
-  public List<GroupResponseDto> getGroups() {
-    return groupService.getGroups();
+  @Operation(summary = "Update an existing group")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Group updated successfully"),
+      @ApiResponse(responseCode = "400", description = "Invalid input or group name already exists"),
+      @ApiResponse(responseCode = "401", description = "Not authenticated"),
+      @ApiResponse(responseCode = "403", description = "Not authorized")
+  })
+  @PutMapping("/{groupId}")
+  public ResponseEntity<GroupResponseDto> updateGroup(@PathVariable String groupId, @RequestBody CreateGroupDto dto) {
+    GroupResponseDto group = groupService.updateGroup(groupId, dto);
+    return ResponseEntity.ok(group);
   }
 
-  @PostMapping("/join/{groupId}")
+  @Operation(summary = "Delete a group")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Group deleted successfully"),
+      @ApiResponse(responseCode = "401", description = "Not authenticated"),
+      @ApiResponse(responseCode = "403", description = "Not authorized")
+  })
+  @DeleteMapping("/{groupId}")
+  public ResponseEntity<String> deleteGroup(@PathVariable String groupId) {
+    groupService.deleteGroup(groupId);
+    return ResponseEntity.ok("Group deleted successfully");
+  }
+
+  @Operation(summary = "Join a group")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Joined group successfully"),
+      @ApiResponse(responseCode = "400", description = "Already a member or group not found"),
+      @ApiResponse(responseCode = "401", description = "Not authenticated")
+  })
+  @PostMapping("/{groupId}/join")
   public ResponseEntity<String> joinGroup(@PathVariable String groupId) {
-    // try {
     groupService.joinGroup(groupId);
-    return ResponseEntity.ok("Joined successfully");
-    // } catch (Exception e) {
-    // return ResponseEntity.notFound().build();
-    // }
+    return ResponseEntity.ok("Joined group successfully");
   }
 
-  @Operation(summary = "Get a group by ID")
-  @ApiResponses(
-      value = {
-        @ApiResponse(responseCode = "200", description = "Group found"),
-        @ApiResponse(responseCode = "404", description = "Group not found")
-      })
-  @GetMapping("/{id}")
-  public ResponseEntity<GroupResponseDto> getGroup(@PathVariable String id) {
-    return ResponseEntity.ok(groupService.getGroupById(id));
+  @Operation(summary = "Leave a group")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Left group successfully"),
+      @ApiResponse(responseCode = "400", description = "Not a member or creator cannot leave"),
+      @ApiResponse(responseCode = "401", description = "Not authenticated")
+  })
+  @PostMapping("/{groupId}/leave")
+  public ResponseEntity<String> leaveGroup(@PathVariable String groupId) {
+    groupService.leaveGroup(groupId);
+    return ResponseEntity.ok("Left group successfully");
+  }
+
+  @Operation(summary = "Get all groups")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Groups found")
+  })
+  @GetMapping
+  public ResponseEntity<List<GroupResponseDto>> getAllGroups() {
+    List<GroupResponseDto> groups = groupService.getAllGroups();
+    return ResponseEntity.ok(groups);
+  }
+
+  @Operation(summary = "Get public groups")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Groups found")
+  })
+  @GetMapping("/public")
+  public ResponseEntity<List<GroupResponseDto>> getPublicGroups() {
+    List<GroupResponseDto> groups = groupService.getPublicGroups();
+    return ResponseEntity.ok(groups);
+  }
+
+  @Operation(summary = "Get my groups")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Groups found")
+  })
+  @GetMapping("/my-groups")
+  public ResponseEntity<List<GroupResponseDto>> getMyGroups() {
+    List<GroupResponseDto> groups = groupService.getMyGroups();
+    return ResponseEntity.ok(groups);
+  }
+
+  @Operation(summary = "Get groups by user")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Groups found")
+  })
+  @GetMapping("/user/{userId}")
+  public ResponseEntity<List<GroupResponseDto>> getGroupsByUser(@PathVariable String userId) {
+    List<GroupResponseDto> groups = groupService.getGroupsByUser(userId);
+    return ResponseEntity.ok(groups);
+  }
+
+  @Operation(summary = "Get group by ID")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Group found"),
+      @ApiResponse(responseCode = "404", description = "Group not found")
+  })
+  @GetMapping("/{groupId}")
+  public ResponseEntity<GroupResponseDto> getGroup(@PathVariable String groupId) {
+    GroupResponseDto group = groupService.getGroupById(groupId);
+    return ResponseEntity.ok(group);
+  }
+
+  @Operation(summary = "Get group count by user")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Count retrieved")
+  })
+  @GetMapping("/user/{userId}/count")
+  public ResponseEntity<Long> getGroupCountByUser(@PathVariable String userId) {
+    Long count = groupService.getGroupCountByUser(userId);
+    return ResponseEntity.ok(count);
+  }
+
+  @Operation(summary = "Get group count by creator")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Count retrieved")
+  })
+  @GetMapping("/creator/{userId}/count")
+  public ResponseEntity<Long> getGroupCountByCreator(@PathVariable String userId) {
+    Long count = groupService.getGroupCountByCreator(userId);
+    return ResponseEntity.ok(count);
   }
 }

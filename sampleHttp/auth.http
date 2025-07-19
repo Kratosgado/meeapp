@@ -1,4 +1,5 @@
 @baseurl =localhost:9000/api/auth
+@hosturl = https://meeapp.onrender.com/api/auth
 
 
 POST {{baseurl}}/signup
@@ -11,7 +12,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{baseurl}}/login
+POST {{hosturl}}/login
 Content-Type: application/json
 
 {

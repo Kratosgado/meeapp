@@ -35,6 +35,14 @@ spring:
     parameters:
       environment: dev
     contexts: ${spring.profiles.active:dev}
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+      exclude: static/**,public/**,templates/**
+    livereload:
+      enabled: true
+      port: 35729
 springdoc:
   api-docs:
     path: /docs/api-docs

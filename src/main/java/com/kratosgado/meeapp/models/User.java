@@ -54,15 +54,11 @@ public class User implements UserDetails {
 	@ManyToMany(mappedBy = "users")
 	private Set<Group> groups = new HashSet<>();
 
-	// queries
-	// getProfile
-	// get posts
-	// get posts by interest
-	// get groups
-	//
+	@OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<Event> createdEvents = new HashSet<>();
 
-	@Enumerated(EnumType.STRING)
-	private Role role;
+	@ManyToMany(mappedBy = "participants")
+	private Set<Event> participatingEvents = new HashSet<>();
 
 	@CreationTimestamp
 	@Column(name = "created_at", updatable = false)
@@ -72,7 +68,6 @@ public class User implements UserDetails {
 		this.name = input.getName();
 		this.email = input.getEmail();
 		this.password = input.getPassword();
-		this.role = Role.USER;
 	}
 
 	@UpdateTimestamp
@@ -80,7 +75,7 @@ public class User implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of(new SimpleGrantedAuthority(role.name()));
+		return List.of(new SimpleGrantedAuthority("USER"));
 	}
 
 	@Override
@@ -117,9 +112,4 @@ public class User implements UserDetails {
 	public String toString() {
 		return id;
 	}
-}
-
-enum Role {
-	USER,
-	ADMIN
 }

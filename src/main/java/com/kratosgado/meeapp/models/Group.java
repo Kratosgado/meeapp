@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Data
 @Getter
@@ -30,6 +31,12 @@ public class Group {
 
 	@Column(nullable = false, unique = true)
 	private String name;
+	
+	@Column(columnDefinition = "TEXT")
+	private String description;
+	
+	@Column(name = "is_public")
+	private Boolean isPublic = true;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "creator_id", nullable = false)
@@ -38,6 +45,10 @@ public class Group {
 	@CreationTimestamp
 	@Column(updatable = false, name = "created_at")
 	protected Date createdAt;
+	
+	@UpdateTimestamp
+	@Column(name = "updated_at")
+	protected Date updatedAt;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_groups", joinColumns = @JoinColumn(name = "group_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
@@ -48,4 +59,7 @@ public class Group {
 
 	@OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Post> posts = new HashSet<>();
+	
+	@OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<Event> events = new HashSet<>();
 }
